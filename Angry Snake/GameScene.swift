@@ -10,80 +10,94 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
+  let swipeDistance = CGFloat(50.0)
+  var touches = [Touch]()
+  var snakes: [Snake]!
+
+  override func didMove(to view: SKView) {
+    snakes = [
+      Snake(in: self, at: CGPoint(x: 0.0, y: 0.0)),
+      //Snake(in: self, at: CGPoint(x: 100.0, y: 100.0))
+    ]
+  }
+
+  override func update(_ currentTime: TimeInterval) {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    
-    override func didMove(to view: SKView) {
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
+  }
+
+  func onTouch(from: CGPoint, to: CGPoint) {
+    let current = 0
+    let snake = snakes[current]
+    if (from.distance(to: to) < swipeDistance) {
+      if snake.body.count > 50 {
+        snake.advance()
+      } else {
+        snake.feed()
+      }
+    } else {
+      if abs(from.x - to.x) > abs(from.y - to.y) {
+        snake.setDirection(CGVector(dx: to.x > from.x ? 1 : -1, dy : 0))
+      } else {
+        snake.setDirection(CGVector(dx: 0, dy: to.y > from.y ? 1 : -1))
+      }
     }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
+  }
+
+  func touchDown(_ touch: UITouch) {
+    for t in touches {
+      if t.touch === touch {
+        return
+      }
     }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+    touches.append(Touch(touch: touch, initPos: touch.location(in: self)))
+  }
+
+  func touchMoved(_ touch: UITouch) {
+
+  }
+
+  func touchUp(_ touch: UITouch) {
+    var idx = 0
+    for t in touches {
+      if t.touch === touch {
+        onTouch(from: t.initPos, to: touch.location(in: self))
+        touches.remove(at: idx)
+        return
+      }
+      idx += 1
     }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+  }
+
+  func touchCanceled(_ touch: UITouch) {
+
+  }
+
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    for t in touches {
+      self.touchDown(t)
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+  }
+
+  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    for t in touches {
+      self.touchMoved(t)
     }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+  }
+
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    for t in touches {
+      self.touchUp(t)
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+  }
+
+  override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    for t in touches {
+      self.touchCanceled(t)
     }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-    }
+  }
+}
+
+struct Touch {
+  let touch: UITouch
+  let initPos: CGPoint
 }

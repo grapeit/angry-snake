@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A25B41792155ACB300A41DE9 /* Snake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25B41782155ACB300A41DE9 /* Snake.swift */; };
+		A25B419F2155D2BC00A41DE9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25B419E2155D2BC00A41DE9 /* Utils.swift */; };
 		A2AE313A2155A77200C0B059 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AE31392155A77200C0B059 /* AppDelegate.swift */; };
 		A2AE313C2155A77200C0B059 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2AE313B2155A77200C0B059 /* GameScene.sks */; };
 		A2AE313E2155A77200C0B059 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2AE313D2155A77200C0B059 /* Actions.sks */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A25B41782155ACB300A41DE9 /* Snake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snake.swift; sourceTree = "<group>"; };
+		A25B419E2155D2BC00A41DE9 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		A2AE31362155A77200C0B059 /* Angry Snake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Angry Snake.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2AE31392155A77200C0B059 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A2AE313B2155A77200C0B059 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -64,7 +68,9 @@
 				A2AE313B2155A77200C0B059 /* GameScene.sks */,
 				A2AE313D2155A77200C0B059 /* Actions.sks */,
 				A2AE313F2155A77200C0B059 /* GameScene.swift */,
+				A25B419E2155D2BC00A41DE9 /* Utils.swift */,
 				A2AE31412155A77200C0B059 /* GameViewController.swift */,
+				A25B41782155ACB300A41DE9 /* Snake.swift */,
 				A2AE31432155A77200C0B059 /* Main.storyboard */,
 				A2AE31462155A77300C0B059 /* Assets.xcassets */,
 				A2AE31482155A77300C0B059 /* LaunchScreen.storyboard */,
@@ -146,6 +152,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A25B419F2155D2BC00A41DE9 /* Utils.swift in Sources */,
+				A25B41792155ACB300A41DE9 /* Snake.swift in Sources */,
 				A2AE31402155A77200C0B059 /* GameScene.swift in Sources */,
 				A2AE31422155A77200C0B059 /* GameViewController.swift in Sources */,
 				A2AE313A2155A77200C0B059 /* AppDelegate.swift in Sources */,
@@ -297,11 +305,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DR7KTY8XQ;
 				INFOPLIST_FILE = "Angry Snake/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.graperit.Angry-Snake";
+				PRODUCT_BUNDLE_IDENTIFIER = com.graperit.angrysnake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -315,11 +324,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DR7KTY8XQ;
 				INFOPLIST_FILE = "Angry Snake/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.graperit.Angry-Snake";
+				PRODUCT_BUNDLE_IDENTIFIER = com.graperit.angrysnake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
