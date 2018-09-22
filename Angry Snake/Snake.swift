@@ -12,6 +12,7 @@ class Snake {
   let size = CGFloat(20.0)
   let tapInteval = TimeInterval(0.5)
   let scene: SKScene
+  var heads: [SKSpriteNode]
   var body = [SKNode]()
   var direction = CGVector()
   var lastMove: TimeInterval
@@ -22,6 +23,15 @@ class Snake {
 
   init(in scene: SKScene, at position: CGPoint) {
     self.scene = scene
+    self.heads = [
+      SKSpriteNode.init(imageNamed: "north"),
+      SKSpriteNode.init(imageNamed: "east"),
+      SKSpriteNode.init(imageNamed: "south"),
+      SKSpriteNode.init(imageNamed: "west")
+    ]
+    for n in self.heads {
+      n.size = CGSize(width: size, height: size)
+    }
     self.lastMove = Date().timeIntervalSince1970
     let head = headNode()
     head.position = position
@@ -83,23 +93,35 @@ class Snake {
 
   }
 
+  func activate() {
+    for n in heads {
+      n.run(SKAction.colorize(with: .red, colorBlendFactor: 0.7, duration: 0.0))
+    }
+    if let n = body.last as? SKShapeNode {
+      n.strokeColor = .red
+    }
+  }
+
+  func deactivate() {
+    for n in heads {
+      n.run(SKAction.colorize(with: .red, colorBlendFactor: 0.0, duration: 0.0))
+    }
+    if let n = body.last as? SKShapeNode {
+      n.strokeColor = .white
+    }
+  }
+
   private func headNode() -> SKNode {
-    var image: String?
-    if (direction.dx < 0) {
-      image = "west"
+    if (direction.dy > 0) {
+      return heads[0]
     } else if (direction.dx > 0) {
-      image = "east"
+      return heads[1]
     } else if (direction.dy < 0) {
-      image = "south"
-    } else if (direction.dy > 0) {
-      image = "north"
+      return heads[2]
+    } else if (direction.dx < 0) {
+      return heads[3]
     }
-    guard let i = image else {
-      return SKShapeNode.init(ellipseOf: CGSize(width: size, height: size))
-    }
-    let n = SKSpriteNode.init(imageNamed: i)
-    n.size = CGSize(width: size, height: size)
-    return n
+    return SKShapeNode.init(ellipseOf: CGSize(width: size, height: size))
   }
 
   private func bodyNode() -> SKNode {

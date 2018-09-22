@@ -12,39 +12,48 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
-                view.presentScene(scene)
-            }
-            
-            view.ignoresSiblingOrder = true
-            
-            view.showsFPS = true
-            view.showsNodeCount = true
-        }
-    }
+  @IBOutlet weak var snakeSwitch: UISegmentedControl!
 
-    override var shouldAutorotate: Bool {
-        return true
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
-    }
+    if let view = self.view as! SKView? {
+      // Load the SKScene from 'GameScene.sks'
+      if let scene = SKScene(fileNamed: "GameScene") {
+        // Set the scale mode to scale to fit the window
+        scene.scaleMode = .aspectFill
 
-    override var prefersStatusBarHidden: Bool {
-        return true
+        // Present the scene
+        view.presentScene(scene)
+      }
+
+      view.ignoresSiblingOrder = true
+
+      view.showsFPS = true
+      view.showsNodeCount = true
     }
+  }
+
+  @IBAction func onSnakeSwith(_ sender: UISegmentedControl) {
+    guard let scene = (self.view as? SKView)?.scene as? GameScene else {
+      return
+    }
+    scene.activeSnake = sender.selectedSegmentIndex
+  }
+
+  override var shouldAutorotate: Bool {
+    return true
+  }
+
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    if UIDevice.current.userInterfaceIdiom == .phone {
+        return .allButUpsideDown
+    } else {
+        return .all
+    }
+  }
+
+  override var prefersStatusBarHidden: Bool {
+    return true
+  }
 }

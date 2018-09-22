@@ -14,11 +14,20 @@ class GameScene: SKScene {
   var touches = [Touch]()
   var snakes: [Snake]!
 
+  var activeSnake = 0 {
+    willSet {
+      snakes[activeSnake].deactivate()
+      snakes[newValue].activate()
+    }
+  }
+
   override func didMove(to view: SKView) {
     snakes = [
+      Snake(in: self, at: CGPoint(x: -100.0, y: 100.0)),
       Snake(in: self, at: CGPoint(x: 0.0, y: 0.0)),
-      //Snake(in: self, at: CGPoint(x: 100.0, y: 100.0))
+      Snake(in: self, at: CGPoint(x: 100.0, y: 100.0))
     ]
+    snakes[activeSnake].activate()
   }
 
   override func update(_ currentTime: TimeInterval) {
@@ -26,10 +35,9 @@ class GameScene: SKScene {
   }
 
   func onTouch(from: CGPoint, to: CGPoint) {
-    let current = 0
-    let snake = snakes[current]
+    let snake = snakes[activeSnake]
     if (from.distance(to: to) < swipeDistance) {
-      if snake.body.count > 50 {
+      if snake.body.count > 30 {
         snake.advance()
       } else {
         snake.feed()
