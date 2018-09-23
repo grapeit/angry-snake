@@ -9,19 +9,24 @@
 import SpriteKit
 
 class Snake {
-  let size = CGFloat(20.0)
-  let tapInteval = TimeInterval(0.5)
+  let size = CGFloat(10.0)
+  let idleInteval = TimeInterval(0.5)
   let scene: SKScene
   var heads: [SKSpriteNode]
   var body = [SKNode]()
+  var dead = false
   var direction = CGVector()
   var lastMove: TimeInterval
 
   var isDead: Bool {
-    return body.isEmpty
+    return dead || body.isEmpty
   }
 
-  init(in scene: SKScene, at position: CGPoint) {
+  var headAt: CGPoint? {
+    return body.first?.position
+  }
+
+  init(in scene: SKScene, at position: CGPoint, direction: CGVector, body: Int) {
     self.scene = scene
     self.heads = [
       SKSpriteNode.init(imageNamed: "north"),
@@ -32,82 +37,143 @@ class Snake {
     for n in self.heads {
       n.size = CGSize(width: size, height: size)
     }
+    self.direction = direction
     self.lastMove = Date().timeIntervalSince1970
     let head = headNode()
     head.position = position
-    body.append(head)
-    scene.addChild(head)
+    self.body.append(head)
+    self.scene.addChild(head)
+    for i in 1...body {
+      let nn = i == body ? tailNode() : bodyNode()
+      nn.position = CGPoint(x: position.x - direction.dx * size * CGFloat(i), y: position.y - direction.dy * size * CGFloat(i))
+      self.body.append(nn)
+      self.scene.addChild(nn)
+    }
   }
 
-  func setDirection(_ direction: CGVector) {
+  func setDirection(_ direction: CGVector, snakes: [Snake]) {
+    guard !isDead else {
+      return
+    }
     if self.direction != direction {
-      if body.count > 1 && direction.isSameDirection(body[body.count - 1].position.direction(to: body[body.count - 2].position)) {
+      if body.count > 1 && direction.isSameDirection(body[0].position.direction(to: body[1].position)) {
         return
       }
       self.direction = direction
-      let nn = headNode()
-      nn.position = body.last!.position
-      body[body.count - 1].removeFromParent()
-      body[body.count - 1] = nn
-      scene.addChild(nn)
-      if Date().timeIntervalSince1970 - lastMove < tapInteval {
-        advance()
+      let h = headNode()
+      h.position = headAt!
+      body[0].removeFromParent()
+      body[0] = h
+      scene.addChild(h)
+      if Date().timeIntervalSince1970 - lastMove < idleInteval {
+        move(snakes: snakes)
       } else {
         lastMove = Date().timeIntervalSince1970
       }
     } else {
-      advance()
+      move(snakes: snakes)
     }
   }
 
-  func advance() {
-    guard !body.isEmpty && (direction.dx != 0.0 || direction.dy != 0.0) else {
+  func move(snakes: [Snake]) {
+    guard !isDead, let hp = headAt, (direction.dx != 0.0 || direction.dy != 0.0) else {
       return
     }
-    var p: CGPoint?
-    for n in body.reversed() {
-      if let x = p {
-        p = n.position
-        n.position = x
-      } else {
-        p = n.position
-        n.position = CGPoint(x: p!.x + direction.dx * size, y: p!.y + direction.dy * size)
+    let np = CGPoint(x: hp.x + direction.dx * size, y: hp.y + direction.dy * size)
+    var collision: Collision = .none
+    var eatee: Snake?
+    for s in snakes {
+      collision = s.checkCollision(np)
+      if collision != .none {
+        if collision == .body && s === self && body.count > 2 && body[body.count - 2].position.distance(to: np) < size / 2 {
+          collision = .tail
+        }
+        if collision == .tail {
+          eatee = s
+        }
+        break
       }
     }
-    lastMove = Date().timeIntervalSince1970
-  }
-
-  func feed() {
-    guard let head = body.last, (direction.dx != 0.0 || direction.dy != 0.0) else {
-      return
+    switch collision {
+    case .body:
+      die()
+    case .none:
+      body[0].position = np
+      var p = hp
+      for n in body[1...] {
+        let op = n.position
+        n.position = p
+        p = op
+      }
+    case .tail:
+      body[0].position = np
+      let nn = body.count > 1 ? bodyNode() : tailNode()
+      nn.position = hp
+      nn.strokeColor = .orange
+      body.insert(nn, at: 1)
+      scene.addChild(nn)
+      eatee?.seize()
     }
-    let nn = body.count > 1 ? bodyNode() : tailNode()
-    nn.position = head.position
-    body.insert(nn, at: body.count - 1)
-    head.position = CGPoint(x: head.position.x + direction.dx * size, y: head.position.y + direction.dy * size)
-    scene.addChild(nn)
     lastMove = Date().timeIntervalSince1970
   }
 
   func seize() {
+    if body.count > 2 {
+      body.last!.position = body[body.count - 2].position
+      body[body.count - 2].removeFromParent()
+      body.remove(at: body.count - 2)
+    } else if body.count > 0 {
+      body.last!.removeFromParent()
+      body.removeLast()
+    }
+    if body.isEmpty {
+      die()
+    }
+  }
 
+  func die() {
+    dead = true
+    repaint(.blue)
+  }
+
+  enum Collision {
+    case none, body, tail
+  }
+
+  func checkCollision(_ at: CGPoint) -> Collision {
+    if body.isEmpty {
+      return Collision.none
+    }
+    if body.count == 1 {
+      return body[0].position.distance(to: at) < size / 2 ? Collision.tail : Collision.none
+    }
+    if body.last!.position.distance(to: at) < size / 2 {
+      return Collision.tail
+    }
+    for i in body {
+      if i.position.distance(to: at) < size / 2 {
+        return Collision.body
+      }
+    }
+    return Collision.none
   }
 
   func activate() {
-    for n in heads {
-      n.run(SKAction.colorize(with: .red, colorBlendFactor: 0.7, duration: 0.0))
-    }
-    if let n = body.last as? SKShapeNode {
-      n.strokeColor = .red
-    }
+    repaint(isDead ? .blue : .orange)
   }
 
   func deactivate() {
+    repaint(isDead ? .blue : .white)
+  }
+
+  func repaint(_ color: UIColor) {
     for n in heads {
-      n.run(SKAction.colorize(with: .red, colorBlendFactor: 0.0, duration: 0.0))
+      n.run(SKAction.colorize(with: color, colorBlendFactor: 0.7, duration: 0.0))
     }
-    if let n = body.last as? SKShapeNode {
-      n.strokeColor = .white
+    for n in body {
+      if let n = n as? SKShapeNode {
+        n.strokeColor = color
+      }
     }
   }
 
@@ -124,11 +190,11 @@ class Snake {
     return SKShapeNode.init(ellipseOf: CGSize(width: size, height: size))
   }
 
-  private func bodyNode() -> SKNode {
+  private func bodyNode() -> SKShapeNode {
     return SKShapeNode.init(ellipseOf: CGSize(width: size * 0.8, height: size * 0.8))
   }
 
-  private func tailNode() -> SKNode {
+  private func tailNode() -> SKShapeNode {
     return SKShapeNode.init(ellipseOf: CGSize(width: size * 0.6, height: size * 0.6))
   }
 }

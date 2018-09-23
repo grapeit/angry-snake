@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-  let swipeDistance = CGFloat(50.0)
+  let swipeDistance = CGFloat(20.0)
   var touches = [Touch]()
   var snakes: [Snake]!
 
@@ -23,9 +23,9 @@ class GameScene: SKScene {
 
   override func didMove(to view: SKView) {
     snakes = [
-      Snake(in: self, at: CGPoint(x: -100.0, y: 100.0)),
-      Snake(in: self, at: CGPoint(x: 0.0, y: 0.0)),
-      Snake(in: self, at: CGPoint(x: 100.0, y: 100.0))
+      Snake(in: self, at: CGPoint(x: -100.0, y: 100.0), direction: CGVector(dx: 0.0, dy: -1.0), body: 10),
+      Snake(in: self, at: CGPoint(x: 0.0, y: 0.0), direction: CGVector(dx: 0.0, dy: 1.0), body: 10),
+      Snake(in: self, at: CGPoint(x: 100.0, y: 100.0), direction: CGVector(dx: 0.0, dy: -1.0), body: 10)
     ]
     snakes[activeSnake].activate()
   }
@@ -37,16 +37,12 @@ class GameScene: SKScene {
   func onTouch(from: CGPoint, to: CGPoint) {
     let snake = snakes[activeSnake]
     if (from.distance(to: to) < swipeDistance) {
-      if snake.body.count > 30 {
-        snake.advance()
-      } else {
-        snake.feed()
-      }
+      snake.move(snakes: snakes)
     } else {
       if abs(from.x - to.x) > abs(from.y - to.y) {
-        snake.setDirection(CGVector(dx: to.x > from.x ? 1 : -1, dy : 0))
+        snake.setDirection(CGVector(dx: to.x > from.x ? 1 : -1, dy : 0), snakes: snakes)
       } else {
-        snake.setDirection(CGVector(dx: 0, dy: to.y > from.y ? 1 : -1))
+        snake.setDirection(CGVector(dx: 0, dy: to.y > from.y ? 1 : -1), snakes: snakes)
       }
     }
   }
