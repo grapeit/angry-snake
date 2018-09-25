@@ -19,9 +19,12 @@ class GameViewController: UIViewController {
 
     if let view = self.view as! SKView? {
       // Load the SKScene from 'GameScene.sks'
-      if let scene = SKScene(fileNamed: "GameScene") {
+      if let scene = SKScene(fileNamed: "GameScene") as? GameScene {
         // Set the scale mode to scale to fit the window
         scene.scaleMode = .resizeFill
+
+        scene.prairie = Prairie(in: scene, snakes: snakeSwitch.numberOfSegments)
+        scene.prairie.activeSnake = snakeSwitch.selectedSegmentIndex
 
         // Present the scene
         view.presentScene(scene)
@@ -38,7 +41,7 @@ class GameViewController: UIViewController {
     guard let scene = (self.view as? SKView)?.scene as? GameScene else {
       return
     }
-    scene.activeSnake = sender.selectedSegmentIndex
+    scene.prairie.activeSnake = sender.selectedSegmentIndex
   }
 
   override var shouldAutorotate: Bool {

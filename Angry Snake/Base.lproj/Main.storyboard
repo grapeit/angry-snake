@@ -19,11 +19,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fns-wk-5cU">
-                                <rect key="frame" x="16" y="620" width="253" height="29"/>
+                                <rect key="frame" x="16" y="620" width="243" height="29"/>
                                 <segments>
                                     <segment title="First"/>
                                     <segment title="Second"/>
                                     <segment title="Third"/>
+                                    <segment title="Fourth"/>
                                 </segments>
                                 <connections>
                                     <action selector="onSnakeSwith:" destination="BV1-FR-VrT" eventType="valueChanged" id="IUH-8l-qwW"/>
@@ -33,7 +34,6 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="fns-wk-5cU" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="dU2-Ge-0y9"/>
-                            <constraint firstItem="4qk-I5-YsI" firstAttribute="trailing" secondItem="fns-wk-5cU" secondAttribute="trailing" constant="106" id="nDe-zu-b0C"/>
                             <constraint firstItem="4qk-I5-YsI" firstAttribute="bottom" secondItem="fns-wk-5cU" secondAttribute="bottom" constant="19" id="q0a-x7-Knd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4qk-I5-YsI"/>

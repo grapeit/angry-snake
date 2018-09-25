@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A22614892159D12500CAECEB /* Prairie.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22614882159D12500CAECEB /* Prairie.swift */; };
 		A25B41792155ACB300A41DE9 /* Snake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25B41782155ACB300A41DE9 /* Snake.swift */; };
 		A25B419F2155D2BC00A41DE9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25B419E2155D2BC00A41DE9 /* Utils.swift */; };
 		A2AE313A2155A77200C0B059 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AE31392155A77200C0B059 /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A22614882159D12500CAECEB /* Prairie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prairie.swift; sourceTree = "<group>"; };
 		A25B41782155ACB300A41DE9 /* Snake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snake.swift; sourceTree = "<group>"; };
 		A25B419E2155D2BC00A41DE9 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		A2AE31362155A77200C0B059 /* Angry Snake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Angry Snake.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +73,7 @@
 				A25B419E2155D2BC00A41DE9 /* Utils.swift */,
 				A2AE31412155A77200C0B059 /* GameViewController.swift */,
 				A25B41782155ACB300A41DE9 /* Snake.swift */,
+				A22614882159D12500CAECEB /* Prairie.swift */,
 				A2AE31432155A77200C0B059 /* Main.storyboard */,
 				A2AE31462155A77300C0B059 /* Assets.xcassets */,
 				A2AE31482155A77300C0B059 /* LaunchScreen.storyboard */,
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A22614892159D12500CAECEB /* Prairie.swift in Sources */,
 				A25B419F2155D2BC00A41DE9 /* Utils.swift in Sources */,
 				A25B41792155ACB300A41DE9 /* Snake.swift in Sources */,
 				A2AE31402155A77200C0B059 /* GameScene.swift in Sources */,
